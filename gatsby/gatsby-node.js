@@ -95,8 +95,8 @@ async function turnSlicemastersIntoPages({ graphql, actions }) {
 
   // data.allSanityPerson.nodes.forEach((person) => console.log(person));
 
-  console.log(data.slicemasters.totalCount);
-  console.log('page size is:', parseInt(process.env.GATSBY_PAGE_SIZE));
+  // console.log(data.slicemasters.totalCount);
+  console.log('page size is:', process.env.GATSBY_PAGE_SIZE);
 
   // const pageSize = parseInt(process.env.GATSBY_PAGE_SIZE);
   // const pageCount = Math.ceil(data.slicemasters.totalCount / pageSize);

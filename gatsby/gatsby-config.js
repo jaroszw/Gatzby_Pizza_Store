@@ -1,10 +1,10 @@
 // require('dotenv').config({
-//   path: `.env`,
+//   path: `.env.${process.env.NODE_ENV}`,
 // });
 
-require('dotenv').config({
-  path: `.env.${process.env.NODE_ENV}`,
-});
+import dotenv from 'dotenv';
+
+dotenv.config({ path: '.env' });
 
 export default {
   siteMetadata: {
