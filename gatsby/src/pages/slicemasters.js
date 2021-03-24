@@ -37,11 +37,10 @@ const SlicemasterStyles = styled.div`
   }
 `;
 
-
 export default function SlicemastersPage({ data, pageContext }) {
   const slicemasters = data.slicemasters.nodes;
   return (
-    <div>
+    <>
       <Pagination
         pageSize={parseInt(process.env.GATSBY_PAGE_SIZE)}
         totalCount={data.slicemasters.totalCount}
@@ -62,7 +61,7 @@ export default function SlicemastersPage({ data, pageContext }) {
           </SlicemasterStyles>
         ))}
       </SlicemasterGrid>
-    </div>
+    </>
   );
 }
 

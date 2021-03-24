@@ -1,4 +1,4 @@
-import path from 'path';
+import path, { resolve } from 'path';
 import fetch from 'isomorphic-fetch';
 
 async function turnPizzasIntoPages({ graphql, actions }) {
@@ -92,6 +92,18 @@ async function turnSlicemastersIntoPages({ graphql, actions }) {
       }
     }
   `);
+
+  data.slicemasters.nodes.forEach((slicemaster) => {
+    console.log(`node.js: ${slicemaster.slug.current}`);
+    actions.createPage({
+      path: `/slicemaster/${slicemaster.slug.current}`,
+      component: path.resolve('./src/templates/Slicemasters.js'),
+      context: {
+        slug: slicemaster.slug.current,
+        name: slicemaster.name,
+      },
+    });
+  });
 
   const pageSize = parseInt(process.env.GATSBY_PAGE_SIZE);
   const pageCount = Math.ceil(data.slicemasters.totalCount / pageSize);
