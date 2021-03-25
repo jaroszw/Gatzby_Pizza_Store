@@ -94,7 +94,6 @@ async function turnSlicemastersIntoPages({ graphql, actions }) {
   `);
 
   data.slicemasters.nodes.forEach((slicemaster) => {
-    console.log(`node.js: ${slicemaster.slug.current}`);
     actions.createPage({
       path: `/slicemaster/${slicemaster.slug.current}`,
       component: path.resolve('./src/templates/Slicemasters.js'),
