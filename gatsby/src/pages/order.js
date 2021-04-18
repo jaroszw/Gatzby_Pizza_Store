@@ -1,6 +1,7 @@
 import React from 'react';
 import { graphql } from 'gatsby';
 import Img from 'gatsby-image';
+import styled from 'styled-components';
 import SEO from '../components/SEO';
 import useForm from '../utils/useForm';
 import calculatePizzaPrice from '../utils/calculatePizzaPrice';
@@ -8,7 +9,6 @@ import fromatMoney from '../utils/formateMoney';
 import OrderStyles from '../styles/OrderStyles';
 import ManuItemStyles from '../styles/MenuItemStyles';
 import usePizza from '../utils/usePizza';
-
 import PizzaOrder from '../components/PizzaOrder';
 import calculateOrderTotal from '../utils/calculateOrderTotal';
 
@@ -17,17 +17,32 @@ export default function OrderPage({ data }) {
   const { values, updateValue } = useForm({
     name: '',
     email: '',
+    mapleSyrup: '',
   });
-  const { order, addToOrder, removeFromOrder } = usePizza({
+
+  const {
+    order,
+    addToOrder,
+    removeFromOrder,
+    error,
+    loading,
+    message,
+    submitOrder,
+  } = usePizza({
     pizzas,
-    inputs: values,
+    values,
   });
+
+  if (message) {
+    return <p>{message}</p>;
+  }
 
   return (
     <div>
       <SEO title="Order a Pizza!" />
-      <OrderStyles action="Order a Pizza">
-        <fieldset>
+
+      <OrderStyles action="Order a Pizza" onSubmit={submitOrder}>
+        <fieldset disabled={loading}>
           <legend>Your Info</legend>
           <label htmlFor="name">
             Name
@@ -50,9 +65,17 @@ export default function OrderPage({ data }) {
               onChange={updateValue}
             />
           </label>
+          <input
+            type="mapleSyrup"
+            name="mapleSyrup"
+            id="mapleSyrup"
+            className="mapleSyrup"
+            value={values.mapleSyrup}
+            onChange={updateValue}
+          />
         </fieldset>
 
-        <fieldset className="menu">
+        <fieldset className="menu" disabled={loading}>
           <legend>Menu</legend>
           {pizzas.map((pizza) => (
             <ManuItemStyles key={pizza.id}>
@@ -67,27 +90,26 @@ export default function OrderPage({ data }) {
               </div>
               <div className="btn">
                 {['S', 'M', 'L'].map((size) => (
-                  <div>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        addToOrder({
-                          id: pizza.id,
-                          size,
-                        })
-                      }
-                    >
-                      {size}
-                      {fromatMoney(calculatePizzaPrice(pizza.price, size))}
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    key={size}
+                    onClick={() =>
+                      addToOrder({
+                        id: pizza.id,
+                        size,
+                      })
+                    }
+                  >
+                    {size}
+                    {fromatMoney(calculatePizzaPrice(pizza.price, size))}
+                  </button>
                 ))}
               </div>
             </ManuItemStyles>
           ))}
         </fieldset>
 
-        <fieldset className="order">
+        <fieldset className="order" disabled={loading}>
           <legend>
             <PizzaOrder
               order={order}
@@ -96,11 +118,14 @@ export default function OrderPage({ data }) {
             />
           </legend>
         </fieldset>
-        <fieldset>
+        <fieldset disabled={loading}>
           <h3>
             Your total is:{fromatMoney(calculateOrderTotal(order, pizzas))}{' '}
           </h3>
-          <button type="submit">Order ahead</button>
+          <div>{error ? <p>Error: {error} </p> : ''}</div>
+          <button type="submit" disabled={loading}>
+            {loading ? 'Placing order...' : ' Order Ahead'}
+          </button>
         </fieldset>
       </OrderStyles>
     </div>
